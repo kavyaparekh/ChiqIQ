@@ -37,5 +37,6 @@ Local Setup and Testing Before deploying, it's best to run the app on your local
 
 4. Run the App Locally:
     streamlit run app.py
+    
 Your application should open in a new browser tab. 
 <img width="983" height="783" alt="Screenshot 2025-09-16 at 10 32 04 PM" src="https://github.com/user-attachments/assets/2e5a48c4-299b-4bb8-bef5-af0c36901b11" />
