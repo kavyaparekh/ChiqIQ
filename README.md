@@ -8,13 +8,16 @@ Session Management: Remembers your conversation history for a seamless and perso
 Simple & Clean UI: Built with Streamlit for a fast, responsive, and easy-to-use interface.
 Tech Stack
 
-Frontend: Streamlit
+Frontend: Streamlit 
+
 Chat Logic: Vext AI
+
 Language: Python
-Setup & Deployment This application is designed to be easily deployed for free on the Streamlit Community Cloud.
 
-Prerequisites
+Setup & Deployment: 
+This application is designed to be easily deployed for free on the Streamlit Community Cloud.
 
+Prerequisites:
 Python 3.8+
 A Vext AI account and API credentials (URL and Key).
 A GitHub account.
