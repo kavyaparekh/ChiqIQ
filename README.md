@@ -1,45 +1,76 @@
-Chiq Iq ✨ - Your Personal AI Fashion Assistant. Chiq Iq is a conversational AI chatbot designed to be your go-to personal stylist. Simply describe an occasion, your style preferences, or the weather, and Chiq Iq will provide tailored outfit recommendations through a natural and intuitive chat interface.
+# Chiq IQ ✨ — AI Fashion Stylist
 
-Core Features
+A conversational AI personal stylist and virtual try-on app built with Python, Streamlit, LangChain, GPT-4o, and a Replicate-powered diffusion model.
 
-Conversational Outfit Suggestions: Get personalized fashion advice through a natural chat interface.
-AI-Powered Responses: Utilizes Vext AI to understand context and provide relevant, creative suggestions.
-Session Management: Remembers your conversation history for a seamless and personalized experience.
-Simple & Clean UI: Built with Streamlit for a fast, responsive, and easy-to-use interface.
-Tech Stack
+---
 
-Frontend: Streamlit 
+## Features
 
-Chat Logic: Vext AI
+**Style Chat (Tab 1)**
+- RAG pipeline grounded in a curated fashion knowledge base: seasonal styling, occasion dressing, color theory, body type guides, and Aritzia-inspired elevated minimalism
+- Multi-turn conversation memory — the stylist remembers context across the session
+- Powered by GPT-4o via LangChain's `ConversationalRetrievalChain` with FAISS vector search
 
-Language: Python
+**Virtual Try-On (Tab 2)**
+- Upload your portrait and a garment image
+- Generates a photorealistic preview of you wearing the outfit
+- Powered by IDM-VTON (Improving Diffusion Models for Authentic Virtual Try-on in the Wild) on Replicate
 
-Setup & Deployment: 
-This application is designed to be easily deployed for free on the Streamlit Community Cloud.
+---
 
-Prerequisites:
-Python 3.8+
-A Vext AI account and API credentials (URL and Key).
-A GitHub account.
-Local Setup and Testing Before deploying, it's best to run the app on your local machine to ensure everything is configured correctly.
+## Tech Stack
 
-1. Clone the Repository:
-    git clone <your-repository-url>
-    cd chiq-iq-app
+| Layer | Technology |
+|---|---|
+| UI | Streamlit |
+| LLM | OpenAI GPT-4o |
+| Embeddings | OpenAI text-embedding-3-small |
+| Vector store | FAISS (local, no server needed) |
+| RAG orchestration | LangChain ConversationalRetrievalChain |
+| Virtual try-on | Replicate — cuuupid/idm-vton |
+| Language | Python 3.11+ |
 
-2. Install Dependencies:
-    pip install -r requirements.txt
+---
 
-3. Configure API Secrets:
-  - Create a new folder in your project directory named .streamlit.
-  - Inside the .streamlit folder, create a new file named secrets.toml.
-  - Add your Vext AI credentials to this file:
-      # Vext AI API Credentials
-      vext_api_url = "PASTE_YOUR_VEXT_AI_URL_HERE"
-      vext_api_key = "PASTE_YOUR_VEXT_AI_KEY_HERE"
+## Setup
 
-4. Run the App Locally:
-    streamlit run app.py
-    
-Your application should open in a new browser tab. 
-<img width="983" height="783" alt="Screenshot 2025-09-16 at 10 32 04 PM" src="https://github.com/user-attachments/assets/2e5a48c4-299b-4bb8-bef5-af0c36901b11" />
+### 1. Clone and install
+
+```bash
+git clone https://github.com/kavyaparekh/ChiqIQ.git
+cd ChiqIQ
+pip install -r requirements.txt
+```
+
+### 2. Add API keys
+
+Create `.streamlit/secrets.toml`:
+
+```toml
+openai_api_key = "sk-..."        # https://platform.openai.com/api-keys
+replicate_api_key = "r8_..."     # https://replicate.com/account/api-tokens
+```
+
+### 3. Run
+
+```bash
+streamlit run app.py
+```
+
+---
+
+## Knowledge Base
+
+The RAG pipeline indexes 7 fashion articles stored as plain text in `knowledge_base/`:
+
+| File | Content |
+|---|---|
+| `01_seasonal_styling.txt` | Spring/Summer/Fall/Winter outfit guides |
+| `02_occasion_dressing.txt` | Dress codes, weddings, interviews, events |
+| `03_color_theory.txt` | Color wheel, skin tone matching, combinations |
+| `04_body_type_styling.txt` | All body shapes and frame types |
+| `05_holiday_festive.txt` | Holiday party and NYE styling |
+| `06_wardrobe_essentials.txt` | Capsule wardrobe, essential pieces, shopping strategy |
+| `07_aritzia_elevated_style.txt` | Elevated minimalism and Aritzia aesthetic |
+
+The knowledge base is designed to be extended — drop in new `.txt` files and restart the app.

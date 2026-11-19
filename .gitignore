@@ -1,0 +1,14 @@
+# secrets — never commit API keys
+.streamlit/secrets.toml
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# macOS
+.DS_Store
+
+# FAISS index if persisted locally
+faiss_index/
