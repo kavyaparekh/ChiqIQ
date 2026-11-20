@@ -103,7 +103,6 @@ def get_vectorstore(nvidia_api_key: str) -> FAISS:
     chunks = splitter.create_documents(raw_texts)
     embeddings = HuggingFaceEmbeddings(
         model_name="all-MiniLM-L6-v2",
-        model_kwargs={"local_files_only": True},
     )
     return FAISS.from_documents(chunks, embeddings)
 
