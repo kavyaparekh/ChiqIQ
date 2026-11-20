@@ -888,7 +888,10 @@ with tab_tryon:
     st.caption("Pick any single garment and generate a try-on preview instantly.")
 
     if not st.session_state.get("user_photo_bytes"):
-        st.info("Upload your photo above first.")
+        st.markdown(
+            "<div class='api-notice'>Upload your photo above first.</div>",
+            unsafe_allow_html=True,
+        )
     else:
         closet_now = st.session_state.get("closet", [])
         if closet_now:
