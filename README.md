@@ -1,20 +1,28 @@
 # Chiq IQ ✨ — AI Fashion Stylist
 
-A conversational AI personal stylist and virtual try-on app built with Python, Streamlit, LangChain, GPT-4o, and a Replicate-powered diffusion model.
+A conversational AI personal stylist and virtual try-on app built with Python, Streamlit, LangChain, NVIDIA NIM, and IDM-VTON on HuggingFace Spaces.
 
 ---
 
 ## Features
 
 **Style Chat (Tab 1)**
-- RAG pipeline grounded in a curated fashion knowledge base: seasonal styling, occasion dressing, color theory, body type guides, and Aritzia-inspired elevated minimalism
-- Multi-turn conversation memory — the stylist remembers context across the session
-- Powered by GPT-4o via LangChain's `ConversationalRetrievalChain` with FAISS vector search
+- Dialogue-driven RAG pipeline — asks focused questions before giving a full outfit recommendation
+- Grounded in a curated fashion knowledge base: seasonal styling, occasion dressing, color theory, body type guides, and elevated minimalist aesthetics
+- Multi-turn conversation memory across the session
+- Closet-aware recommendations — if you've uploaded your wardrobe, the bot prioritises your actual pieces
+- Aritzia product links — triggered automatically when you ask to shop or find items online; bot asks for colour, style, size, and budget before searching
+- Try-on offer — when closet is uploaded, bot asks if you'd like to see your closet pieces styled for the occasion
+- Powered by `nvidia/nemotron-3.5-bolt-e4b` via NVIDIA NIM and LangChain LCEL with FAISS vector search
 
-**Virtual Try-On (Tab 2)**
-- Upload your portrait and a garment image
-- Generates a photorealistic preview of you wearing the outfit
-- Powered by IDM-VTON (Improving Diffusion Models for Authentic Virtual Try-on in the Wild) on Replicate
+**My Closet & Try-On (Tab 2)**
+- Upload a front-facing portrait (used for all try-on generations)
+- Upload multiple garment images — vision AI (`meta/llama-3.2-11b-vision-instruct`) auto-describes each item
+- Closet grid view with AI-generated captions
+- Chat-driven try-on: bot selects the 3 most occasion-appropriate closet items and generates photorealistic try-on previews
+- One-off try-on: pick any single garment from your closet and generate instantly
+- Powered by IDM-VTON on HuggingFace Spaces (`yisol/IDM-VTON`) with `Nymbo/Virtual-Try-On` as fallback
+- Supports up to 3 HuggingFace tokens for quota rotation
 
 ---
 
@@ -23,11 +31,13 @@ A conversational AI personal stylist and virtual try-on app built with Python, S
 | Layer | Technology |
 |---|---|
 | UI | Streamlit |
-| LLM | OpenAI GPT-4o |
-| Embeddings | OpenAI text-embedding-3-small |
+| LLM | `nvidia/nemotron-3.5-bolt-e4b` via NVIDIA NIM |
+| Vision (garment description) | `meta/llama-3.2-11b-vision-instruct` via NVIDIA NIM |
+| Embeddings | `all-MiniLM-L6-v2` (HuggingFace, local) |
 | Vector store | FAISS (local, no server needed) |
-| RAG orchestration | LangChain ConversationalRetrievalChain |
-| Virtual try-on | Replicate — cuuupid/idm-vton |
+| RAG orchestration | LangChain LCEL |
+| Virtual try-on | IDM-VTON on HuggingFace Spaces (`yisol/IDM-VTON`) |
+| Product search | DuckDuckGo scrape via BeautifulSoup4 |
 | Language | Python 3.11+ |
 
 ---
@@ -47,8 +57,13 @@ pip install -r requirements.txt
 Create `.streamlit/secrets.toml`:
 
 ```toml
-openai_api_key = "sk-..."        # https://platform.openai.com/api-keys
-replicate_api_key = "r8_..."     # https://replicate.com/account/api-tokens
+nvidia_api_key = "nvapi-..."     # https://build.nvidia.com  (free tier available)
+
+# HuggingFace tokens for virtual try-on (ZeroGPU quota)
+# Add up to 3 — the app rotates through them when one hits its limit
+hf_token1 = "hf_..."            # https://huggingface.co/settings/tokens  (Read access)
+hf_token2 = "hf_..."            # optional second token
+hf_token3 = "hf_..."            # optional third token
 ```
 
 ### 3. Run
@@ -71,6 +86,14 @@ The RAG pipeline indexes 7 fashion articles stored as plain text in `knowledge_b
 | `04_body_type_styling.txt` | All body shapes and frame types |
 | `05_holiday_festive.txt` | Holiday party and NYE styling |
 | `06_wardrobe_essentials.txt` | Capsule wardrobe, essential pieces, shopping strategy |
-| `07_aritzia_elevated_style.txt` | Elevated minimalism and Aritzia aesthetic |
+| `07_aritzia_elevated_style.txt` | Elevated minimalism and polished everyday style |
 
-The knowledge base is designed to be extended — drop in new `.txt` files and restart the app.
+Drop in new `.txt` files and restart the app to extend the knowledge base.
+
+---
+
+## Notes
+
+- **ZeroGPU quota**: each try-on uses ~60–90s of GPU time. The free HuggingFace tier resets hourly. Add multiple `hf_token` keys to rotate automatically.
+- **Garment descriptions**: vision AI describes each uploaded garment automatically on save. Best results with plain-background garment photos.
+- **Try-on quality**: works best with clear, front-facing full-body or upper-body portraits and garments photographed on a white/plain background.
